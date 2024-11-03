@@ -1,0 +1,95 @@
+### Append playbook copy for each machine in inventory
+
+### vm01 ###
+- hosts: localhost
+  tags: k3s
+  gather_facts: false
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  tasks:
+    - name: Provisioning...
+      ansible.builtin.shell: terraform apply -target=xenorchestra_vm.vm01 -auto-approve
+      register: terraform_apply
+      delegate_to: localhost
+    - name: Waiting for machine to come up...
+      ansible.builtin.wait_for:
+        host: "10.100.170.235"
+        port: 22
+        state: started
+        timeout: 600
+      delegate_to: localhost
+- hosts: 10.100.170.235
+  tags: k3s, conf
+  gather_facts: true
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  become: true
+  tasks:
+  - name: Changing hostname...
+    ansible.builtin.hostname:
+      name: "vm01"
+  - name: Changing ip address...
+    ansible.builtin.shell: nmcli con modify "eth0" ipv4.addresses "10.100.170.11/24"
+  - name: Unconditionally reboot the machine with all defaults
+    ansible.builtin.shell: reboot
+    async: 1
+    poll: 0
+    ignore_errors: true
+- hosts: localhost
+  tags: k3s
+  gather_facts: false
+  tasks:
+    - name: Waiting for machine to come up...
+      ansible.builtin.wait_for:
+        host: "10.100.170.11"
+        port: 22
+        state: started
+        timeout: 600
+      delegate_to: localhost
+
+### vm02 ###
+- hosts: localhost
+  tags: k3s
+  gather_facts: false
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  tasks:
+    - name: Provisioning...
+      ansible.builtin.shell: terraform apply -target=xenorchestra_vm.vm02 -auto-approve
+      register: terraform_apply
+      delegate_to: localhost
+    - name: Waiting for machine to come up...
+      ansible.builtin.wait_for:
+        host: "10.100.170.235"
+        port: 22
+        state: started
+        timeout: 600
+      delegate_to: localhost
+- hosts: 10.100.170.235
+  tags: k3s, conf
+  gather_facts: true
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  become: true
+  tasks:
+  - name: Changing hostname...
+    ansible.builtin.hostname:
+      name: "vm02"
+  - name: Changing ip address...
+    ansible.builtin.shell: nmcli con modify "eth0" ipv4.addresses "10.100.170.12/24"
+  - name: Unconditionally reboot the machine with all defaults
+    ansible.builtin.shell: reboot
+    async: 1
+    poll: 0
+    ignore_errors: true
+- hosts: localhost
+  tags: k3s
+  gather_facts: false
+  tasks:
+    - name: Waiting for machine to come up...
+      ansible.builtin.wait_for:
+        host: "10.100.170.11"
+        port: 22
+        state: started
+        timeout: 600
+      delegate_to: localhost

@@ -1,0 +1,24 @@
+#necessario perchè awx scarichi correttamente i requisiti dei playbook
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/icinga2-agent
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/fail2ban
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/sssd
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/ansible-ispconfig-centos7
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/reperibile-icinga
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/reperibile-checkservice
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/haproxy_deploy_ssl_cert
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/sinapto/ldap_passwdexpiration_check
+  scm: git
+- src: https://gitlab.viviani/system-infrastructure/ansible/roles/external/logrotate
+  scm: git
+- src: https://git.sinapto.net/system-infrastructure/ansible/roles/external/ansible-role-ntp
+  scm: git
+
+# from galaxy
+- name: willshersystems.sshd
